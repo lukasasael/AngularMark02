@@ -1,0 +1,33 @@
+<h1>Configurações</h1>
+
+<mat-card>
+  <form [formGroup]="form">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nome do profissional</mat-label>
+      <input matInput formControlName="professionalName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>CRO</mat-label>
+      <input matInput formControlName="cro" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nome da clínica</mat-label>
+      <input matInput formControlName="clinicName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Duração da consulta (min)</mat-label>
+      <input matInput type="number" formControlName="appointmentDuration" />
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="save()">
+        Salvar alterações
+      </button>
+    </div>
+
+  </form>
+</mat-card>

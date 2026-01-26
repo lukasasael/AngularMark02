@@ -1,0 +1,36 @@
+<h1>Agenda</h1>
+
+<div class="agenda-layout">
+
+  <!-- Calendário -->
+  <mat-card>
+    <mat-calendar
+      (selectedChange)="onDateSelected($event)"
+    ></mat-calendar>
+  </mat-card>
+
+  <!-- Detalhe do dia -->
+  <mat-card class="day-detail">
+    <h3>Atendimentos do dia</h3>
+
+    @if (agenda$ | async; as agenda) {
+
+      @if (agenda.length === 0) {
+        <p class="empty">Nenhum atendimento para este dia.</p>
+      }
+
+      @for (item of agenda; track item.id) {
+        <div class="agenda-item">
+          <span class="time">{{ item.time }}</span>
+          <div class="info">
+            <strong>{{ item.patientName }}</strong>
+            <span>{{ item.procedure }}</span>
+          </div>
+          <span class="status">{{ item.status }}</span>
+        </div>
+      }
+
+    }
+  </mat-card>
+
+</div>

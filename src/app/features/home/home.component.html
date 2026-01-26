@@ -1,0 +1,33 @@
+<h1 class="title">Bem-vindo 👋</h1>
+<p class="subtitle">
+  Acompanhe rapidamente o estado da clínica.
+</p>
+
+<!-- Ações principais -->
+<div class="actions">
+  <mat-card routerLink="/patients" class="action-card">
+    <mat-icon>people</mat-icon>
+    <span>Pacientes</span>
+  </mat-card>
+
+  <mat-card routerLink="/agenda" class="action-card">
+    <mat-icon>event</mat-icon>
+    <span>Agenda</span>
+  </mat-card>
+
+  <mat-card class="action-card disabled">
+    <mat-icon>add_circle</mat-icon>
+    <span>Novo atendimento</span>
+  </mat-card>
+</div>
+
+<!-- Resumo -->
+<section class="summary">
+  <h3>Resumo</h3>
+
+  <ul>
+    <li>Pacientes cadastrados: <strong>10</strong></li>
+    <li>Tratamentos em andamento: <strong>6</strong></li>
+    <li>Consultas hoje: <strong>2</strong></li>
+  </ul>
+</section>

@@ -1,0 +1,43 @@
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  padding-top: 1rem;
+  color: #0B6EFD;
+}
+
+.patients-table {
+  width: 100%;
+  border-spacing: 0;
+  padding: 0 1% 1% 1%;
+}
+
+th {
+  font-weight: 600;
+  color: #555;
+}
+
+td {
+  color: #333;
+}
+
+/* Linha interativa */
+.row {
+  cursor: pointer;
+}
+
+.row:hover {
+  background-color: #f1f4fb;
+}
+
+/* Coluna de ação alinhada à direita */
+td:last-child {
+  text-align: right;
+}
+
+.loader {
+  font-style: italic;
+  color: #777;
+  padding: 1rem;
+}

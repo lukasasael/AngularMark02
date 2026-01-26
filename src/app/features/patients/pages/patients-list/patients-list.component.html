@@ -1,0 +1,65 @@
+<mat-card>
+
+  <mat-card-title class="card-title">Pacientes</mat-card-title>
+
+  @if (patients$ | async; as patients) {
+
+    <table
+      mat-table
+      [dataSource]="patients"
+      class="patients-table"
+    >
+
+      <!-- Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let patient">
+          {{ patient.nome }}
+        </td>
+      </ng-container>
+
+      <!-- Plano -->
+      <ng-container matColumnDef="plano">
+        <th mat-header-cell *matHeaderCellDef>Plano</th>
+        <td mat-cell *matCellDef="let patient">
+          {{ patient.planoTratamento }}
+        </td>
+      </ng-container>
+
+      <!-- Data de início -->
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef>Início</th>
+        <td mat-cell *matCellDef="let patient">
+          {{ patient.dataInicio | date:'dd/MM/yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Ação -->
+      <ng-container matColumnDef="editar">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let patient">
+          <button
+            mat-icon-button
+            [routerLink]="[patient.id]"
+          >
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Header e Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="row"
+        [routerLink]="[row.id]"
+      ></tr>
+
+    </table>
+
+  } @else {
+    <p class="loader">Carregando lista de pacientes...</p>
+  }
+
+</mat-card>

@@ -1,0 +1,16 @@
+@if (breadcrumbs$ | async; as breadcrumbs) {
+
+<nav class="breadcrumb">
+  @for (crumb of breadcrumbs; track $index; let last = $last) { @if (!last) {
+  <a [routerLink]="crumb.url">
+    {{ crumb.label }}
+  </a>
+  <span> / </span>
+  } @else {
+  <span>
+    {{ crumb.label }}
+  </span>
+  } }
+</nav>
+
+}

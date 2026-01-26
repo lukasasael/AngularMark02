@@ -1,0 +1,60 @@
+/* HEADER */
+.toolbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* LAYOUT */
+.layout {
+  height: calc(100vh - 64px); // remove altura do header
+}
+
+/* SIDENAV ESTREITO */
+.sidenav {
+  width: 240px; // 🔥 estreito e moderno
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
+}
+
+.config {
+  margin-top: 100px;
+}
+
+/* Ícones centralizados */
+mat-nav-list a {
+  justify-content: center;
+  padding: 16px 0;
+}
+
+mat-icon {
+  margin: 0;
+}
+
+/* CONTEÚDO */
+.content {
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100%;
+}
+
+/* ITEM ATIVO */
+.active-link {
+  background-color: rgba(13, 110, 253, 0.1);
+  border-radius: 8px;
+}
+
+/* Botão sair mais elegante */
+button[mat-stroked-button] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
