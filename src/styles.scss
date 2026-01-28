@@ -36,3 +36,33 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+.snackbar-success {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.snackbar-error {
+  background: #c62828;
+  color: #fff;
+}
+
+.snackbar-info {
+  background: #1565c0;
+  color: #fff;
+}
+
+.global-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.status-chip {
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+}

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PatientsFacade } from '../../facade/patients.facade';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,8 @@ import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { BreadcrumbService } from '../../../../shared/ui/breadcrumb.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
@@ -36,6 +38,18 @@ export class PatientDetailComponent {
   readonly prontuario$ = this.patientsFacade.prontuario$;
   private fb = inject(FormBuilder);
   private facade = inject(PatientsFacade);
+  private breadcrumb = inject(BreadcrumbService);
+
+  private patientForBreadcrumb = toSignal(this.patient$, { initialValue: null });
+
+  constructor() {
+    effect(() => {
+      const patient = this.patientForBreadcrumb();
+      if (!patient) return;
+
+      this.breadcrumb.setLastLabel(patient.nome);
+    });
+  }
 
   showForm = false;
 

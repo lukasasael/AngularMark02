@@ -1,1 +1,7 @@
-<router-outlet></router-outlet>
+@if (loadingService.loading()) {
+  <div class="global-loading">
+    <mat-progress-bar mode="indeterminate" />
+  </div>
+}
+
+<router-outlet />

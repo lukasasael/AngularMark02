@@ -15,7 +15,7 @@ export const PATIENTS_ROUTES: Routes = [
       {
         path: ':id',
         component: PatientDetailComponent,
-        data: { breadcrumb: 'Detalhes do Paciente' },
+        data: { breadcrumb: 'Detalhes do Paciente', dynamicBreadcrumb: true },
         resolve: {
           patient: patientDetailResolver,
         },
