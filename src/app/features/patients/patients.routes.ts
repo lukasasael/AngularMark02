@@ -3,8 +3,8 @@ import { PatientsListComponent } from './pages/patients-list/patients-list.compo
 import { PatientDetailComponent } from './pages/patient-detail/patient-detail.component';
 import { patientDetailResolver } from './resolvers/patient-detail.resolver';
 import { PatientCreateComponent } from './pages/patient-create/patient-create.component';
+import { PatientEditPage } from './pages/patient-edit/patient-edit.component';
 import { authGuard } from '../../core/auth/auth.guard';
-import { PatientFormComponent } from './ui/patient-form.component';
 
 export const PATIENTS_ROUTES: Routes = [
   {
@@ -31,11 +31,8 @@ export const PATIENTS_ROUTES: Routes = [
       },
       {
         path: ':id/edit', // 👈 ROTA DE EDIÇÃO
-        component: PatientFormComponent,
+        component: PatientEditPage,
         data: { breadcrumb: 'Editar paciente'},
-        resolve: {
-          patient: patientDetailResolver,
-        },
       },
     ],
   },

@@ -1,8 +1,8 @@
-import { Injectable, inject } from "@angular/core";
-import { BehaviorSubject, Observable, distinctUntilChanged, switchMap, map } from "rxjs";
-import { Appointment } from "../models/appointment.model";
-import { Patient } from "../models/patient.model";
-import { PatientsService } from "../services/patients.service";
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable, distinctUntilChanged, switchMap, map, of } from 'rxjs';
+import { Appointment } from '../models/appointment.model';
+import { Patient } from '../models/patient.model';
+import { PatientsService } from '../services/patients.service';
 
 @Injectable({ providedIn: 'root' })
 export class PatientsFacade {
@@ -13,29 +13,26 @@ export class PatientsFacade {
   // 👇 NOVO: cache interno (não exposto)
   private _selectedPatient?: Patient;
 
-  readonly patients$: Observable<Patient[]> =
-    this.patientsService.getPatients();
+  readonly patients$: Observable<Patient[]> = this.patientsService.getPatients();
 
-  readonly selectedPatient$: Observable<Patient | undefined> =
-    this.selectedPatientId$.pipe(
-      distinctUntilChanged(),
-      switchMap((id) => {
-        if (!id) {
-          return [undefined];
-        }
-        return this.patientsService.getPatientById(id);
-      }),
-      // 👇 NOVO: side-effect controlado
-      map((patient) => {
-        this._selectedPatient = patient;
-        return patient;
-      })
-    );
+  readonly selectedPatient$: Observable<Patient | undefined> = this.selectedPatientId$.pipe(
+    distinctUntilChanged(),
+    switchMap((id) => {
+      if (!id) {
+        return of(undefined);
+      }
 
-  readonly prontuario$: Observable<Appointment[]> =
-    this.selectedPatient$.pipe(
-      map((patient) => patient?.prontuario ?? [])
-    );
+      return this.patientsService.getPatientById(id);
+    }),
+    map((patient) => {
+      this._selectedPatient = patient;
+      return patient;
+    }),
+  );
+
+  readonly prontuario$: Observable<Appointment[]> = this.selectedPatient$.pipe(
+    map((patient) => patient?.prontuario ?? []),
+  );
 
   // 🔹 comandos (intenção)
   selectPatient(id: string) {
@@ -52,22 +49,23 @@ export class PatientsFacade {
     return this._selectedPatient;
   }
 
-  createPatient(
-    data: Pick<Patient, 'nome' | 'idade' | 'planoTratamento' | 'dataInicio'>
-  ) {
-    const patient: Patient = {
+  createPatient(data: Pick<Patient, 'nome' | 'idade' | 'planoTratamento' | 'dataInicio'>) {
+    const patient = {
       ...data,
-      id: crypto.randomUUID(),
       historico: '',
-      casos: [],
-      prontuario: [],
     };
 
-    this.patientsService.createPatient(patient);
+    return this.patientsService.createPatient(patient);
   }
 
-  updatePatient(id: string, changes: Partial<Patient>) {
-    this.patientsService.updatePatient(id, changes);
+  updatePatient(
+    id: string,
+    data: Pick<Patient, 'nome' | 'idade' | 'planoTratamento' | 'dataInicio'>,
+  ) {
+    return this.patientsService.updatePatient(id, {
+      ...data,
+      historico: this._selectedPatient?.historico ?? '',
+    });
   }
 
   addAppointment(entry: Omit<Appointment, 'id'>) {

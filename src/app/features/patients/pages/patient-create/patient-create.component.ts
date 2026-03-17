@@ -17,7 +17,13 @@ export class PatientCreateComponent {
   private router = inject(Router);
 
   create(data: { nome: string; idade: number; planoTratamento: string; dataInicio: string }) {
-    this.facade.createPatient(data);
-    this.router.navigate(['/patients']);
+    this.facade.createPatient(data).subscribe({
+      next: () => {
+        this.router.navigate(['/patients']);
+      },
+      error: (err) => {
+        console.error('Erro ao criar paciente', err);
+      },
+    });
   }
 }
