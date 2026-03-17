@@ -1,0 +1,11 @@
+@if (patient$ | async; as patient) {
+  <mat-card class="patient-edit-card">
+    <h2>Editar paciente</h2>
+
+    <app-patient-form
+      [initialData]="patient"
+      submitLabel="Salvar alterações"
+      (submitForm)="save($event)"
+    />
+  </mat-card>
+}

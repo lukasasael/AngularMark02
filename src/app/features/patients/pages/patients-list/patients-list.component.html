@@ -1,15 +1,11 @@
 <mat-card>
+  <div class="header">
+    <mat-card-title class="card-title">Pacientes</mat-card-title>
 
-  <mat-card-title class="card-title">Pacientes</mat-card-title>
-
+    <button mat-stroked-button color="primary" routerLink="new">Novo paciente</button>
+  </div>
   @if (patients$ | async; as patients) {
-
-    <table
-      mat-table
-      [dataSource]="patients"
-      class="patients-table"
-    >
-
+    <table mat-table [dataSource]="patients" class="patients-table">
       <!-- Nome -->
       <ng-container matColumnDef="nome">
         <th mat-header-cell *matHeaderCellDef>Nome</th>
@@ -30,7 +26,7 @@
       <ng-container matColumnDef="data">
         <th mat-header-cell *matHeaderCellDef>Início</th>
         <td mat-cell *matCellDef="let patient">
-          {{ patient.dataInicio | date:'dd/MM/yyyy' }}
+          {{ patient.dataInicio | date: 'dd/MM/yyyy' }}
         </td>
       </ng-container>
 
@@ -38,10 +34,7 @@
       <ng-container matColumnDef="editar">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let patient">
-          <button
-            mat-icon-button
-            [routerLink]="[patient.id]"
-          >
+          <button mat-icon-button [routerLink]="[patient.id]">
             <mat-icon>chevron_right</mat-icon>
           </button>
         </td>
@@ -55,11 +48,8 @@
         class="row"
         [routerLink]="[row.id]"
       ></tr>
-
     </table>
-
   } @else {
     <p class="loader">Carregando lista de pacientes...</p>
   }
-
 </mat-card>

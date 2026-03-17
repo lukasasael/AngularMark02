@@ -10,8 +10,15 @@
 }
 
 /* Cabeçalho */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 1rem;
+}
+
 .patient-name {
-  margin: 0;
+  margin-bottom: 1rem;
   font-size: 28px;
   font-weight: 500;
 }

@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BreadcrumbService } from '../../../../shared/ui/breadcrumb.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { PatientFormComponent } from '../../ui/patient-form.component';
 
 @Component({
   standalone: true,
@@ -27,6 +28,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    PatientFormComponent
   ],
   templateUrl: './patient-detail.component.html',
   styleUrls: ['./patient-detail.component.scss'],
@@ -70,5 +72,17 @@ export class PatientDetailComponent {
     this.facade.addAppointment(this.form.getRawValue());
     this.form.reset();
     this.showForm = false;
+  }
+
+  updatePatient(data: {
+    nome: string;
+    idade: number;
+    planoTratamento: string;
+    dataInicio: string;
+  }) {
+    const current = this.patientForBreadcrumb();
+    if (!current) return;
+
+    this.facade.updatePatient(current.id, data);
   }
 }
