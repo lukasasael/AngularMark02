@@ -1,37 +1,33 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Patient } from '../models/patient.model';
-import { Appointment } from '../models/appointment.model';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PatientsService {
-  private readonly patients$ = new BehaviorSubject<Patient[]>([]);
+  private readonly apiUrl = `${environment.apiUrl}/patients`;
 
-  constructor(private http: HttpClient) {
-    this.http.get<Patient[]>('http://localhost:8080/api/patients').subscribe((patients) => {
-      this.patients$.next(patients);
-    });
-  }
+  constructor(private http: HttpClient) {}
 
   getPatients(): Observable<Patient[]> {
-    return this.http.get<any[]>('http://localhost:8080/api/patients').pipe(
+    return this.http.get<any[]>(this.apiUrl).pipe(
       map((patients) =>
         patients.map((patient) => ({
           ...patient,
-          casos: [],
-          prontuario: [],
+          casos: patient.casos ?? [],
+          prontuario: patient.prontuario ?? [],
         })),
       ),
     );
   }
 
   getPatientById(id: string): Observable<Patient> {
-    return this.http.get<any>(`http://localhost:8080/api/patients/${id}`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map((patient) => ({
         ...patient,
-        casos: [],
-        prontuario: [],
+        casos: patient.casos ?? [],
+        prontuario: patient.prontuario ?? [],
       })),
     );
   }
@@ -42,8 +38,8 @@ export class PatientsService {
     planoTratamento: string;
     dataInicio: string;
     historico: string;
-  }) {
-    return this.http.post('http://localhost:8080/api/patients', patient);
+  }): Observable<Patient> {
+    return this.http.post<Patient>(this.apiUrl, patient);
   }
 
   updatePatient(
@@ -55,14 +51,7 @@ export class PatientsService {
       dataInicio: string;
       historico: string;
     },
-  ) {
-    return this.http.put(`http://localhost:8080/api/patients/${id}`, patient);
-  }
-
-  addAppointment(patientId: string, entry: Appointment) {
-    const patient = this.patients$.value.find((p) => p.id === patientId);
-    if (!patient) return;
-
-    patient.prontuario.unshift(entry); // mais recente primeiro
+  ): Observable<Patient> {
+    return this.http.put<Patient>(`${this.apiUrl}/${id}`, patient);
   }
 }

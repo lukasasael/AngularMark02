@@ -5,90 +5,57 @@
   </button>
 
   <mat-card class="detail-card">
-    <!-- Cabeçalho -->
     <div class="header">
       <div>
-        <h1 class="patient-name">
-          {{ patient.nome }}
-        </h1>
+        <h1 class="patient-name">{{ patient.nome }}</h1>
         <p class="patient-age">{{ patient.idade }} anos</p>
       </div>
-      <button mat-raised-button color="primary" [routerLink]="['/patients', patient.id, 'edit']">
+
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="['/patients', patient.id, 'edit']">
         Editar paciente
       </button>
     </div>
 
     <mat-divider></mat-divider>
 
-    <!-- Plano -->
     <section class="section">
       <h3>Plano de tratamento</h3>
       <p>{{ patient.planoTratamento }}</p>
     </section>
 
-    <!-- Histórico -->
     <section class="section">
       <h3>Histórico</h3>
-      <p>{{ patient.historico }}</p>
+      <p>{{ patient.historico || 'Sem histórico informado.' }}</p>
     </section>
 
-    <!-- Casos -->
     <section class="section">
       <h3>Casos</h3>
-      <div class="cases">
-        @for (caso of patient.casos; track caso) {
-          <span class="case">{{ caso }}</span>
-        }
-      </div>
+
+      @if (patient.casos.length) {
+        <div class="cases">
+          @for (caso of patient.casos; track caso) {
+            <span class="case">{{ caso }}</span>
+          }
+        </div>
+      } @else {
+        <p class="empty">Nenhum caso registrado.</p>
+      }
     </section>
 
-    <!-- Data -->
     <section class="section">
       <h3>Data de início</h3>
       <p>{{ patient.dataInicio | date: 'dd/MM/yyyy' }}</p>
     </section>
-    <section class="section">
-      <button mat-stroked-button color="primary" (click)="toggleForm()">+ Novo atendimento</button>
-    </section>
-
-    @if (showForm) {
-      <form [formGroup]="form" class="appointment-form">
-        <mat-form-field appearance="outline">
-          <mat-label>Data</mat-label>
-          <input matInput type="date" formControlName="date" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Procedimento</mat-label>
-          <input matInput formControlName="procedure" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Evolução / Observações</mat-label>
-          <textarea matInput rows="3" formControlName="notes"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Profissional</mat-label>
-          <input matInput formControlName="professional" />
-        </mat-form-field>
-
-        <div class="actions">
-          <button mat-button (click)="toggleForm()">Cancelar</button>
-          <button mat-raised-button color="primary" (click)="save()">Salvar</button>
-        </div>
-      </form>
-    }
   </mat-card>
 
   <section class="section">
     <h3>Prontuário</h3>
 
-    @if (prontuario$ | async; as entries) {
-      @if (entries.length === 0) {
-        <p class="empty">Nenhum atendimento registrado.</p>
-      }
-      @for (entry of entries; track entry.id) {
+    @if (patient.prontuario.length) {
+      @for (entry of patient.prontuario; track entry.id) {
         <div class="entry">
           <div class="entry-date">
             {{ entry.date | date: 'dd/MM/yyyy' }}
@@ -103,6 +70,8 @@
           </div>
         </div>
       }
+    } @else {
+      <p class="empty">Nenhum atendimento registrado.</p>
     }
   </section>
 } @else {

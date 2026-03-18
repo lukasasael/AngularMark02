@@ -3,9 +3,9 @@
     <h2>Editar paciente</h2>
 
     <app-patient-form
-      [initialData]="patient"
+      [patient]="patient"
       submitLabel="Salvar alterações"
-      (submitForm)="save($event)"
+      (save)="save($event)"
     />
   </mat-card>
 }

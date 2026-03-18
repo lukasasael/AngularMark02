@@ -1,18 +1,13 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PatientsFacade } from '../../facade/patients.facade';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { RouterLink } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { BreadcrumbService } from '../../../../shared/ui/breadcrumb.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { PatientFormComponent } from '../../ui/patient-form.component';
 
 @Component({
   standalone: true,
@@ -22,27 +17,22 @@ import { PatientFormComponent } from '../../ui/patient-form.component';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule,
     MatDividerModule,
     RouterLink,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    PatientFormComponent
   ],
   templateUrl: './patient-detail.component.html',
   styleUrls: ['./patient-detail.component.scss'],
 })
-export class PatientDetailComponent {
-  private patientsFacade = inject(PatientsFacade);
+export class PatientDetailComponent implements OnInit, OnDestroy {
+  private readonly patientsFacade = inject(PatientsFacade);
+  private readonly breadcrumb = inject(BreadcrumbService);
+  private readonly route = inject(ActivatedRoute);
 
   readonly patient$ = this.patientsFacade.selectedPatient$;
-  readonly prontuario$ = this.patientsFacade.prontuario$;
-  private fb = inject(FormBuilder);
-  private facade = inject(PatientsFacade);
-  private breadcrumb = inject(BreadcrumbService);
 
-  private patientForBreadcrumb = toSignal(this.patient$, { initialValue: null });
+  private readonly patientForBreadcrumb = toSignal(this.patient$, {
+    initialValue: null,
+  });
 
   constructor() {
     effect(() => {
@@ -53,36 +43,14 @@ export class PatientDetailComponent {
     });
   }
 
-  showForm = false;
-
-  form = this.fb.nonNullable.group({
-    date: [''],
-    procedure: [''],
-    notes: [''],
-    professional: [''],
-  });
-
-  toggleForm() {
-    this.showForm = !this.showForm;
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.patientsFacade.selectPatient(id);
+    }
   }
 
-  save() {
-    if (this.form.invalid) return;
-
-    this.facade.addAppointment(this.form.getRawValue());
-    this.form.reset();
-    this.showForm = false;
-  }
-
-  updatePatient(data: {
-    nome: string;
-    idade: number;
-    planoTratamento: string;
-    dataInicio: string;
-  }) {
-    const current = this.patientForBreadcrumb();
-    if (!current) return;
-
-    this.facade.updatePatient(current.id, data);
+  ngOnDestroy(): void {
+    this.patientsFacade.clearSelectedPatient();
   }
 }

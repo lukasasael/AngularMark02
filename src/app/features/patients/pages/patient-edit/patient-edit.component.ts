@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientsFacade } from '../../facade/patients.facade';
@@ -12,31 +12,37 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './patient-edit.component.html',
   styleUrls: ['./patient-edit.component.scss'],
 })
-export class PatientEditPage implements OnInit {
+export class PatientEditPage implements OnInit, OnDestroy {
   private facade = inject(PatientsFacade);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   readonly patient$ = this.facade.selectedPatient$;
 
-  ngOnInit() {
+  ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.facade.selectPatient(id);
     }
   }
 
-  save(data: { nome: string; idade: number; planoTratamento: string; dataInicio: string }) {
-    const patient = this.facade.getSelectedPatientSnapshot();
-    if (!patient) return;
+  ngOnDestroy(): void {
+    this.facade.clearSelectedPatient();
+  }
 
-    this.facade.updatePatient(patient.id, data).subscribe({
-      next: () => {
-        this.router.navigate(['/patients', patient.id]);
-      },
-      error: (err) => {
-        console.error('Erro ao atualizar paciente', err);
-      },
+  save(data: {
+    nome: string;
+    idade: number;
+    planoTratamento: string;
+    dataInicio: string;
+    historico: string;
+  }): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) return;
+
+    this.facade.updatePatient(id, data).subscribe({
+      next: () => this.router.navigate(['/patients', id]),
+      error: (err) => console.error('Erro ao atualizar paciente', err),
     });
   }
 }

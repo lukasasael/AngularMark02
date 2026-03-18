@@ -1,11 +1,22 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnChanges,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Patient } from '../models/patient.model';
-import { RedirectCommand, RouterLink } from "@angular/router";
 
 @Component({
   standalone: true,
@@ -16,43 +27,53 @@ import { RedirectCommand, RouterLink } from "@angular/router";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    RouterLink
-],
+  ],
   templateUrl: './patient-form.component.html',
   styleUrls: ['./patient-form.component.scss'],
 })
-
-export class PatientFormComponent {
+export class PatientFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
 
-  @Input() initialData?: Patient;
+  @Input() patient: Patient | null = null;
   @Input() submitLabel = 'Salvar';
 
-  @Output() submitForm = new EventEmitter<
-    Pick<Patient, 'nome' | 'idade' | 'planoTratamento' | 'dataInicio'>
-  >();
+  @Output() save = new EventEmitter<{
+    nome: string;
+    idade: number;
+    planoTratamento: string;
+    dataInicio: string;
+    historico: string;
+  }>();
 
-  form = this.fb.nonNullable.group({
-    nome: [''],
-    idade: [0],
-    planoTratamento: [''],
-    dataInicio: [''],
+  readonly form = this.fb.nonNullable.group({
+    nome: ['', [Validators.required]],
+    idade: [0, [Validators.required, Validators.min(0)]],
+    planoTratamento: ['', [Validators.required]],
+    dataInicio: ['', [Validators.required]],
   });
 
-  ngOnChanges() {
-    if (!this.initialData) return;
-
-    this.form.patchValue({
-      nome: this.initialData.nome,
-      idade: this.initialData.idade,
-      planoTratamento: this.initialData.planoTratamento,
-      dataInicio: this.initialData.dataInicio,
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['patient'] && this.patient) {
+      this.form.patchValue({
+        nome: this.patient.nome ?? '',
+        idade: this.patient.idade ?? 0,
+        planoTratamento: this.patient.planoTratamento ?? '',
+        dataInicio: this.patient.dataInicio ?? '',
+      });
+    }
   }
 
-  submit() {
+  submit(): void {
     if (this.form.invalid) return;
-    this.submitForm.emit(this.form.getRawValue());
-    
+
+    const value = this.form.getRawValue();
+
+    this.save.emit({
+      nome: value.nome,
+      idade: value.idade,
+      planoTratamento: value.planoTratamento,
+      dataInicio: value.dataInicio,
+      historico: this.patient?.historico ?? '',
+    });
   }
 }
