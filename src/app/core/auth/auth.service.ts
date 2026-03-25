@@ -1,29 +1,49 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-const AUTH_STORAGE_KEY = 'isLogged';
+const TOKEN_STORAGE_KEY = 'token';
+
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  token: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly loggedSubject = new BehaviorSubject<boolean>(false);
+  private http = inject(HttpClient);
+
+  private readonly loggedSubject = new BehaviorSubject<boolean>(this.hasToken());
   isLogged$ = this.loggedSubject.asObservable();
 
-  constructor() {
-    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
-    const isLogged = stored === 'true';
+  login(email: string, password: string) {
+    const body: LoginRequest = { email, password };
 
-    this.loggedSubject.next(isLogged);
-
-    console.log('AuthService init → isLogged:', isLogged);
-  }
-
-  login() {
-    localStorage.setItem(AUTH_STORAGE_KEY, 'true');
-    this.loggedSubject.next(true);
+    return this.http
+      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, body)
+      .pipe(
+        tap((response) => {
+          localStorage.setItem(TOKEN_STORAGE_KEY, response.token);
+          this.loggedSubject.next(true);
+        })
+      );
   }
 
   logout() {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
     this.loggedSubject.next(false);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(TOKEN_STORAGE_KEY);
+  }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem(TOKEN_STORAGE_KEY);
   }
 }

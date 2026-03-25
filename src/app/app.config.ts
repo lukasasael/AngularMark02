@@ -7,6 +7,8 @@ import {
 } from '@angular/material/core';
 
 import { routes } from './app.routes';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './core/auth/auth.interceptor';
 
 export const BR_DATE_FORMATS = {
   parse: {
@@ -26,5 +28,8 @@ export const appConfig: ApplicationConfig = {
     provideNativeDateAdapter(),
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
     { provide: MAT_DATE_FORMATS, useValue: BR_DATE_FORMATS },
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
   ],
 };

@@ -7,8 +7,8 @@ export class AuthFacade {
   private authService = inject(AuthService);
   isLogged$ = this.authService.isLogged$;
 
-  login() {
-    this.authService.login();
+  login(email: string, password: string) {
+    return this.authService.login(email, password);
   }
 
   logout() {
