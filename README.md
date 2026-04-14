@@ -1,59 +1,68 @@
-# AngularMark02
+🦷 Sistema de Gestão de Pacientes (Angular + Spring Boot)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+Aplicação fullstack para gerenciamento de pacientes, desenvolvida com Angular no frontend e Spring Boot no backend, com integração real via API REST e persistência em banco de dados PostgreSQL.
 
-## Development server
+📌 Sobre o projeto
 
-To start a local development server, run:
+Este projeto simula um sistema clínico para controle de pacientes, permitindo o gerenciamento completo de informações como dados pessoais, plano de tratamento e histórico clínico.
 
-```bash
-ng serve
-```
+A aplicação foi construída seguindo boas práticas de arquitetura, separação de responsabilidades e integração progressiva entre frontend e backend.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+🚀 Funcionalidades
+Cadastro de pacientes
+Listagem de pacientes
+Visualização de detalhes
+Edição de pacientes
+Gerenciamento de prontuário (histórico clínico)
+Autenticação real com JWT
+Rotas protegidas (frontend e backend)
+Integração completa com API REST
+🧱 Arquitetura
+Frontend (Angular)
+Arquitetura baseada em features
+Uso de Facade Pattern para desacoplamento da lógica
+Gerenciamento reativo com RxJS
+Formulários reativos
+Rotas protegidas com guards
+Interceptor HTTP para envio automático do token JWT
+Separação entre componentes de página e componentes reutilizáveis
 
-## Code scaffolding
+Principais camadas:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+pages → telas
+ui → componentes reutilizáveis
+facade → orquestração de estado
+services → comunicação HTTP
+Backend (Spring Boot)
+API REST estruturada em camadas:
+Controller
+Service
+Repository
+Uso de DTOs para desacoplamento
+Tratamento global de exceções
+Segurança com Spring Security + JWT
+Proteção de endpoints via autenticação
+🗄️ Banco de Dados
+PostgreSQL rodando via Docker
+Persistência real dos dados da aplicação
+Hibernate com geração automática de schema
+🔐 Autenticação
 
-```bash
-ng generate component component-name
-```
+A aplicação possui autenticação completa baseada em JWT:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Login via endpoint /api/auth/login
+Geração de token JWT no backend
+Armazenamento do token no frontend
+Envio automático do token via interceptor HTTP
+Proteção de rotas no Angular (guards)
+Proteção de endpoints no backend (Spring Security)
+🔗 Integração Frontend ↔ Backend
 
-```bash
-ng generate --help
-```
+A aplicação realiza comunicação real entre Angular e Spring Boot:
 
-## Building
+Consumo de API via HttpClient
+Base URL externalizada por environment
+CRUD completo de pacientes integrado
+Envio automático de token JWT nas requisições protegidas
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Isso significa que o projeto opera totalmente com dados reais e autenticação ativa.
